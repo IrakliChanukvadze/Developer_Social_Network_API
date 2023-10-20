@@ -1,0 +1,1 @@
+{"version":3,"file":"createNewProject.js","sourceRoot":"","sources":["../../../src/schemaValidators/projectSchemaValidators/createNewProject.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;AAAA,+CAAiC;AAGpB,QAAA,gBAAgB,GAAG,GAAG,CAAC,MAAM,CAAC;IACzC,kCAAkC;IAClC,WAAW,EAAE,GAAG,CAAC,MAAM,EAAE,CAAC,QAAQ,EAAE;CACrC,CAAC,CAAC"}

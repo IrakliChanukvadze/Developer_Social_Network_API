@@ -4,7 +4,7 @@ import { MigrationFn } from 'umzug';
 export const up: MigrationFn<Sequelize> = async ({ context }) => {
   const q = context.getQueryInterface();
 
-  await q.createTable('experience', {
+  await q.createTable('experiences', {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
@@ -37,5 +37,5 @@ export const up: MigrationFn<Sequelize> = async ({ context }) => {
 export const down: MigrationFn<Sequelize> = async ({ context }) => {
   const q = context.getQueryInterface();
 
-  await q.dropTable('experience');
+  await q.dropTable('experiences');
 };

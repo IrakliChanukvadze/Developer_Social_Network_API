@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { Models } from '../interfaces/general';
 import { User } from './user.model';
 
-interface ProjectAttributes {
+export interface ProjectAttributes {
   id: number;
   image: string;
   description: string;

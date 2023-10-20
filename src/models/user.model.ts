@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { Models } from '../interfaces/general';
+import bcrypt from 'bcrypt';
 
 export enum UserRole {
   Admin = 'Admin',
@@ -10,10 +11,10 @@ interface UserAttributes {
   id: number;
   firstName: string;
   lastName: string;
-  image: string;
+  image?: string;
   title: string;
   summary: string;
-  role: UserRole;
+  role: 'Admin' | 'User';
   email: string;
   password: string;
 }
@@ -25,16 +26,18 @@ export class User
   id: number;
   firstName: string;
   lastName: string;
-  image: string;
+  image: string | null;
   title: string;
   summary: string;
-  role: UserRole;
+  role: 'Admin' | 'User';
   email: string;
   password: string;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
-
+  async validatePassword(password: string) {
+    return bcrypt.compare(password, this.password);
+  }
   static defineSchema(sequelize: Sequelize) {
     User.init(
       {
@@ -55,7 +58,8 @@ export class User
         },
         image: {
           type: new DataTypes.STRING(256),
-          allowNull: false,
+          allowNull: true,
+          defaultValue: '',
         },
         title: {
           type: new DataTypes.STRING(256),

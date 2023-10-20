@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { Models } from '../interfaces/general';
 import { User } from './user.model';
 
-interface ExperienceAttributes {
+export interface ExperienceAttributes {
   id: number;
   user_id: number;
   company_name: string;

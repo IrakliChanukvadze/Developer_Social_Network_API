@@ -13,7 +13,7 @@ exports.down = exports.up = void 0;
 const sequelize_1 = require("sequelize");
 const up = ({ context }) => __awaiter(void 0, void 0, void 0, function* () {
     const q = context.getQueryInterface();
-    yield q.createTable('experience', {
+    yield q.createTable('experiences', {
         id: {
             type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
@@ -45,7 +45,7 @@ const up = ({ context }) => __awaiter(void 0, void 0, void 0, function* () {
 exports.up = up;
 const down = ({ context }) => __awaiter(void 0, void 0, void 0, function* () {
     const q = context.getQueryInterface();
-    yield q.dropTable('experience');
+    yield q.dropTable('experiences');
 });
 exports.down = down;
 //# sourceMappingURL=experience-schema.js.map

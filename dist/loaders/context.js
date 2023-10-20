@@ -10,12 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadContext = void 0;
+const user_service_1 = require("../services/user.service");
 const auth_service_1 = require("../services/auth.service");
+const feedback_service_1 = require("../services/feedback.service");
+const experience_service_1 = require("../services/experience.service");
 const loadContext = () => __awaiter(void 0, void 0, void 0, function* () {
     return {
         services: {
             authService: new auth_service_1.AuthService(),
-        }
+            userService: new user_service_1.UserService(),
+            experienceService: new experience_service_1.ExperienceService(),
+            feedbackService: new feedback_service_1.FeedbackService(),
+        },
     };
 });
 exports.loadContext = loadContext;

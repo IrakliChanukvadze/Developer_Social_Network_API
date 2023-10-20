@@ -47,7 +47,7 @@ class Experience extends sequelize_1.Model {
     }
     static associate(models, sequelize) {
         // Define associations here, if needed.
-        Experience.belongsTo(models.user, { foreignKey: 'user_id' });
+        Experience.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
     }
 }
 exports.Experience = Experience;

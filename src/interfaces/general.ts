@@ -1,13 +1,19 @@
 import express from 'express';
 import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
 import { Feedback } from '../models/feedbacks.model';
 import { Project } from '../models/projects.model';
 import { Experience } from '../models/experience.model';
+import { ExperienceService } from '../services/experience.service';
+import { FeedbackService } from '../services/feedback.service';
 
 export interface Context {
   services: {
     authService: AuthService;
+    userService: UserService;
+    experienceService: ExperienceService;
+    feedbackService: FeedbackService;
   };
 }
 

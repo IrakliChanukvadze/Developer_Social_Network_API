@@ -35,7 +35,7 @@ class Project extends sequelize_1.Model {
     }
     static associate(models, sequelize) {
         // Define associations here, if needed.
-        Project.belongsTo(models.user, { foreignKey: 'user_id' });
+        Project.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
     }
 }
 exports.Project = Project;

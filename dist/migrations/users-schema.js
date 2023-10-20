@@ -46,6 +46,7 @@ const up = ({ context }) => __awaiter(void 0, void 0, void 0, function* () {
         email: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: false,
+            unique: true,
         },
         password: {
             type: sequelize_1.DataTypes.STRING,

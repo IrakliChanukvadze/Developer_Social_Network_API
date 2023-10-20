@@ -5,12 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeAuthRouter = void 0;
 const express_1 = __importDefault(require("express"));
+const schemaValidator_1 = require("../middleware/schemaValidator");
+const AuthControllers_1 = __importDefault(require("../controllers/AuthControllers"));
+const mutlerConfig_1 = __importDefault(require("../middleware/mutlerConfig"));
+const authControllers = new AuthControllers_1.default();
 const makeAuthRouter = (context) => {
     const router = express_1.default.Router();
-    // Define routes
-    router.route('/').get((req, res) => {
-        res.status(201).json({ status: 'success', data: 'data' });
-    });
+    router
+        .route('/registration')
+        .post(mutlerConfig_1.default.single('image'), (0, schemaValidator_1.schemaValidator)(authControllers.schemas.createnewUserSchema), authControllers.createNewUser);
+    router
+        .route('/login')
+        .post(mutlerConfig_1.default.any(), (0, schemaValidator_1.schemaValidator)(authControllers.schemas.authenticateUserSchema), authControllers.authenticateUser);
     return router;
 };
 exports.makeAuthRouter = makeAuthRouter;
