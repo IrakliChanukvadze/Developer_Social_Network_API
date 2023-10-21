@@ -7,9 +7,9 @@ import { schemaValidator } from '../middleware/schemaValidator';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 import ExperienceController from '../controllers/ExperienceControllers';
-const experienceController = new ExperienceController();
 
 export const makeExperienceRouter: RouterFactory = (context: Context) => {
+  const experienceController = new ExperienceController(context);
   const router = express.Router();
 
   router

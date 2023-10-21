@@ -4,10 +4,9 @@ import { schemaValidator } from '../middleware/schemaValidator';
 import AuthControllers from '../controllers/AuthControllers';
 import upload from '../middleware/mutlerConfig';
 
-const authControllers = new AuthControllers();
-
 export const makeAuthRouter: RouterFactory = (context: Context) => {
   const router = express.Router();
+  const authControllers = new AuthControllers(context);
 
   router
     .route('/registration')

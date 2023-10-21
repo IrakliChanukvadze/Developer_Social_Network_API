@@ -6,6 +6,7 @@ type TArgFunc = (
   res: Response,
   next: NextFunction,
 ) => Promise<void>;
+
 type TMiddleware = (req: Request, res: Response, next: NextFunction) => void;
 
 function catchAsync(fn: TArgFunc): TMiddleware {

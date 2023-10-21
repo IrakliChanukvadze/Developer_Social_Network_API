@@ -2,14 +2,13 @@ import catchAsync from '../utils/catchAsync';
 import { NextFunction, Response, Request } from 'express';
 import AppError from '../utils/appError';
 import { addExperienceSchema } from '../schemaValidators/experienceSchemaValidators/addExperienceSchema';
-import { ExperienceService } from '../services/experience.service';
 import { ExperienceAttributes } from '../models/experience.model';
-const experienceService = new ExperienceService();
+import { Context } from '../interfaces/general';
 
 class ExperienceController {
   public readonly schemas = { addExperienceSchema };
 
-  constructor() {}
+  constructor(private context: Context) {}
   createExperience = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const experienceData: ExperienceAttributes = req.body;
@@ -17,8 +16,11 @@ class ExperienceController {
         //@ts-ignore
         experienceData.user_id = req.user.id;
       }
+
       const newExperience =
-        await experienceService.createExperience(experienceData);
+        await this.context.services.experienceService.createExperience(
+          experienceData,
+        );
 
       res.status(201).json(newExperience);
     },
@@ -34,10 +36,11 @@ class ExperienceController {
       // Parse page and limit as integers, use default values if not provided
       const parsedPage = page ? parseInt(page as string, 10) : defaultPage;
       const parsedLimit = limit ? parseInt(limit as string, 10) : defaultLimit;
-      const experience = await experienceService.getExperiences(
-        parsedLimit,
-        parsedPage,
-      );
+      const experience =
+        await this.context.services.experienceService.getExperiences(
+          parsedLimit,
+          parsedPage,
+        );
       res.status(200).json({ experience });
     },
   );
@@ -46,7 +49,8 @@ class ExperienceController {
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      const user = await experienceService.getExperienceById(id);
+      const user =
+        await this.context.services.experienceService.getExperienceById(id);
 
       if (!user) {
         return next(new AppError('User not found', 404));
@@ -61,10 +65,11 @@ class ExperienceController {
       const { id } = req.params;
       const userData = req.body;
 
-      const updatedUser = await experienceService.updateExperience(
-        id,
-        userData,
-      );
+      const updatedUser =
+        await this.context.services.experienceService.updateExperience(
+          id,
+          userData,
+        );
 
       if (!updatedUser) {
         return next(new AppError('User not found', 404));
@@ -78,7 +83,7 @@ class ExperienceController {
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      await experienceService.deleteExperience(id);
+      await this.context.services.experienceService.deleteExperience(id);
 
       res.status(204).send();
     },

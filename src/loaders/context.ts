@@ -3,6 +3,7 @@ import { Context } from '../interfaces/general';
 import { AuthService } from '../services/auth.service';
 import { FeedbackService } from '../services/feedback.service';
 import { ExperienceService } from '../services/experience.service';
+import { ProjectService } from '../services/project.service';
 
 export const loadContext = async (): Promise<Context> => {
   return {
@@ -11,6 +12,7 @@ export const loadContext = async (): Promise<Context> => {
       userService: new UserService(),
       experienceService: new ExperienceService(),
       feedbackService: new FeedbackService(),
+      projectService: new ProjectService(),
     },
   };
 };

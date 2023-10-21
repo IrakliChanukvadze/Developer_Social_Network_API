@@ -9,12 +9,12 @@ export class ExperienceService {
 
     return newExperiences;
   }
+
   async getExperiences(page: number, pageSize: number) {
     const limit = pageSize || 10; // Default page size
     const offset = (page - 1) * limit || 0; // Calculate offset based on the page
 
     const experiences = await Experience.findAll();
-    console.log(experiences, 'asdasdasdasdasdasdasd');
 
     return experiences;
   }

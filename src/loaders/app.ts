@@ -6,7 +6,7 @@ import { loadModels } from './models';
 import { loadSequelize } from './sequelize';
 import { config } from '../config';
 import { loadPassport } from './passport';
-
+import { User } from '../models/user.model';
 export const loadApp = async () => {
   const app = express();
   const sequelize = loadSequelize(config);

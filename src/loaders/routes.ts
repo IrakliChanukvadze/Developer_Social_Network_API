@@ -7,10 +7,10 @@ import { makeUserRouter } from '../routes/user';
 import { makeExperienceRouter } from '../routes/experience';
 import { makeFeedbackRouter } from '../routes/feedback';
 import { makeProjectRouter } from '../routes/project';
+import requestID from 'express-request-id';
 
 export const loadRoutes = (app: express.Router, context: Context) => {
-  app.use(express.json());
-
+  app.use(requestID());
   app.use('/api/auth', makeAuthRouter(context));
   app.use('/api/users', makeUserRouter(context));
   app.use('/api/experience', makeExperienceRouter(context));

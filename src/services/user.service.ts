@@ -1,9 +1,7 @@
 import { User } from '../models/user.model';
-import bcrypt from 'bcrypt';
 import { RegistrationRequest } from '../schemaValidators/authSchemaValidators/registration.schema';
+import bcrypt from 'bcrypt';
 
-import dotenv from 'dotenv';
-dotenv.config();
 export class UserService {
   async createNewUser(userData: RegistrationRequest) {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -40,6 +38,16 @@ export class UserService {
       ],
     });
     return users;
+  }
+
+  async getUserCV(id: string) {
+    const result = await User.findByPk(id, {
+      include: [{ all: true }],
+    });
+
+    //@ts-ignore
+
+    return result;
   }
 
   async getUserById(id: string) {

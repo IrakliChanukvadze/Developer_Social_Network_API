@@ -1,22 +1,21 @@
 import catchAsync from '../utils/catchAsync';
 import { NextFunction, Response, Request } from 'express';
 import { addFeedbackSchema } from '../schemaValidators/feedbackSchemaValidators/createFeedback';
-import { FeedbackService } from '../services/feedback.service';
 import { FeedbackAttributes } from '../models/feedbacks.model';
+import { Context } from '../interfaces/general';
 import AppError from '../utils/appError';
-
-const feedbackService = new FeedbackService();
 
 class FeedbackController {
   public readonly schemas = { addFeedbackSchema };
 
-  constructor() {}
+  constructor(private context: Context) {}
   createFeedback = async (req: Request, res: Response, next: NextFunction) => {
     const feedbackData: FeedbackAttributes = req.body;
     //@ts-ignore
     feedbackData.from_user = req.user.id;
 
-    const newFeedback = await feedbackService.createFeedback(feedbackData);
+    const newFeedback =
+      await this.context.services.feedbackService.createFeedback(feedbackData);
 
     res.status(201).json(newFeedback);
   };
@@ -35,10 +34,11 @@ class FeedbackController {
         ? parseInt(pageSize as string, 10)
         : defaultPageSize;
 
-      const feedbacks = await feedbackService.getFeedbacks(
-        parsedPage,
-        parsedPageSize,
-      );
+      const feedbacks =
+        await this.context.services.feedbackService.getFeedbacks(
+          parsedPage,
+          parsedPageSize,
+        );
 
       res.status(200).json({ feedbacks });
     },
@@ -48,7 +48,8 @@ class FeedbackController {
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      const feedback = await feedbackService.getFeedbackById(id);
+      const feedback =
+        await this.context.services.feedbackService.getFeedbackById(id);
 
       if (!feedback) {
         return next(new AppError('Feedback not found', 404));
@@ -63,10 +64,11 @@ class FeedbackController {
       const { id } = req.params;
       const userData = req.body;
 
-      const updatedFeedback = await feedbackService.updateFeedback(
-        id,
-        userData,
-      );
+      const updatedFeedback =
+        await this.context.services.feedbackService.updateFeedback(
+          id,
+          userData,
+        );
 
       if (!updatedFeedback) {
         return next(new AppError('Feedback not found', 404));
@@ -80,7 +82,7 @@ class FeedbackController {
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      await feedbackService.deleteFeedback(id);
+      await this.context.services.feedbackService.deleteFeedback(id);
 
       res.status(204).send();
     },

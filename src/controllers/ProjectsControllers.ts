@@ -1,27 +1,26 @@
 import catchAsync from '../utils/catchAsync';
 import { NextFunction, Response, Request } from 'express';
-
+import { Context } from '../interfaces/general';
 import AppError from '../utils/appError';
 import { createNewProject } from '../schemaValidators/projectSchemaValidators/createNewProject';
-import { ProjectService } from '../services/project.service';
-const projectService = new ProjectService();
 
 class ProjectControllers {
   public readonly schemas = {
     createNewProject,
   };
 
-  constructor() {}
+  constructor(private context: Context) {}
   createProject = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const projectData = req.body;
       //@ts-ignore
       projectData.user_id = req.user.id;
 
-      const newProject = await projectService.createProject(
-        projectData,
-        req.file,
-      );
+      const newProject =
+        await this.context.services.projectService.createProject(
+          projectData,
+          req.file,
+        );
 
       res.status(201).json(newProject);
     },
@@ -41,7 +40,7 @@ class ProjectControllers {
         ? parseInt(pageSize as string, 10)
         : defaultPageSize;
 
-      const projects = await projectService.getProjects(
+      const projects = await this.context.services.projectService.getProjects(
         parsedPage,
         parsedPageSize,
       );
@@ -54,7 +53,8 @@ class ProjectControllers {
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      const project = await projectService.getProjectById(id);
+      const project =
+        await this.context.services.projectService.getProjectById(id);
 
       if (!project) {
         return next(new AppError('Project not found', 404));
@@ -69,10 +69,11 @@ class ProjectControllers {
       const { id } = req.params;
       const projectData = req.body;
 
-      const updatedProject = await projectService.updateProject(
-        id,
-        projectData,
-      );
+      const updatedProject =
+        await this.context.services.projectService.updateProject(
+          id,
+          projectData,
+        );
 
       if (!updatedProject) {
         return next(new AppError('Project not found', 404));
@@ -86,7 +87,7 @@ class ProjectControllers {
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      await projectService.deleteProject(id);
+      await this.context.services.projectService.deleteProject(id);
 
       res.status(204).send();
     },

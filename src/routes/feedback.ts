@@ -7,9 +7,9 @@ import { schemaValidator } from '../middleware/schemaValidator';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 import FeedbackControllers from '../controllers/FeedbackControllers';
-const feedbackControllers = new FeedbackControllers();
 
 export const makeFeedbackRouter: RouterFactory = (context: Context) => {
+  const feedbackControllers = new FeedbackControllers(context);
   const router = express.Router();
 
   router

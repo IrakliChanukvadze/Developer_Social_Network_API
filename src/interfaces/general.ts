@@ -7,6 +7,7 @@ import { Project } from '../models/projects.model';
 import { Experience } from '../models/experience.model';
 import { ExperienceService } from '../services/experience.service';
 import { FeedbackService } from '../services/feedback.service';
+import { ProjectService } from '../services/project.service';
 
 export interface Context {
   services: {
@@ -14,6 +15,7 @@ export interface Context {
     userService: UserService;
     experienceService: ExperienceService;
     feedbackService: FeedbackService;
+    projectService: ProjectService;
   };
 }
 

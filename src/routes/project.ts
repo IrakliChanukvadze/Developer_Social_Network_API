@@ -7,9 +7,9 @@ import { schemaValidator } from '../middleware/schemaValidator';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 import ProjectControllers from '../controllers/ProjectsControllers';
-const projectControllers = new ProjectControllers();
 
 export const makeProjectRouter: RouterFactory = (context: Context) => {
+  const projectControllers = new ProjectControllers(context);
   const router = express.Router();
 
   router

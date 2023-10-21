@@ -7,9 +7,9 @@ import UserControllers from '../controllers/UserControllers';
 import { schemaValidator } from '../middleware/schemaValidator';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
-const userControllers = new UserControllers();
 
 export const makeUserRouter: RouterFactory = (context: Context) => {
+  const userControllers = new UserControllers(context);
   const router = express.Router();
 
   router
@@ -26,6 +26,7 @@ export const makeUserRouter: RouterFactory = (context: Context) => {
     .route('/')
     .get(verifyJWT, checkAdminPermission, userControllers.getUsers);
 
+  router.route('/:id/cv').get(userControllers.getUserCV);
   router.route('/:id').get(userControllers.getUserById);
   router
     .route('/:id')
@@ -38,15 +39,7 @@ export const makeUserRouter: RouterFactory = (context: Context) => {
 
   router
     .route('/:id')
-    .put(
-      verifyJWT,
-      checkUserPermission,
-      upload.single('image'),
-      userControllers.updateUser,
-    );
-
-  router
-    .route('/:id')
     .delete(verifyJWT, checkAdminOrUserPermission, userControllers.deleteUser);
+
   return router;
 };
