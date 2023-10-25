@@ -27,20 +27,30 @@ export const makeUserRouter: RouterFactory = (context: Context) => {
     .route('/')
     .get(verifyJWT, checkAdminPermission, userControllers.getUsers);
 
-  router.route('/:id/cv').get(userControllers.getUserCV);
-  router.route('/:id').get(userControllers.getUserById);
+  router
+    .route('/:id/cv')
+    .get(schemaValidatorForParams, userControllers.getUserCV);
+  router
+    .route('/:id')
+    .get(schemaValidatorForParams, userControllers.getUserById);
   router
     .route('/:id')
     .put(
       verifyJWT,
       checkUserPermission,
       upload.single('image'),
+      schemaValidatorForParams,
       userControllers.updateUser,
     );
 
   router
     .route('/:id')
-    .delete(verifyJWT, checkAdminOrUserPermission, userControllers.deleteUser);
+    .delete(
+      verifyJWT,
+      checkAdminOrUserPermission,
+      schemaValidatorForParams,
+      userControllers.deleteUser,
+    );
 
   return router;
 };
