@@ -1,6 +1,6 @@
 import { Context, RouterFactory } from '../interfaces/general';
-import express, { Request, Response } from 'express';
-import { schemaValidator } from '../middleware/schemaValidator';
+import express from 'express';
+import { schemaValidatorForBody } from '../middleware/validators/schemaValidatorForBody';
 import AuthControllers from '../controllers/AuthControllers';
 import upload from '../middleware/mutlerConfig';
 
@@ -12,7 +12,7 @@ export const makeAuthRouter: RouterFactory = (context: Context) => {
     .route('/registration')
     .post(
       upload.single('image'),
-      schemaValidator(authControllers.schemas.createnewUserSchema),
+      schemaValidatorForBody(authControllers.schemas.createnewUserSchema),
       authControllers.createNewUser,
     );
 
@@ -20,7 +20,7 @@ export const makeAuthRouter: RouterFactory = (context: Context) => {
     .route('/login')
     .post(
       upload.any(),
-      schemaValidator(authControllers.schemas.authenticateUserSchema),
+      schemaValidatorForBody(authControllers.schemas.authenticateUserSchema),
       authControllers.authenticateUser,
     );
 

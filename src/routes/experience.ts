@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import upload from '../middleware/mutlerConfig';
 import { checkAdminPermission } from '../middleware/permisionMiddlwares/checkAdminPermision';
 import { verifyJWT } from '../middleware/verifyJWT';
-import { schemaValidator } from '../middleware/schemaValidator';
+import { schemaValidatorForBody } from '../middleware/validators/schemaValidatorForBody';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 import ExperienceController from '../controllers/ExperienceControllers';
@@ -18,7 +18,7 @@ export const makeExperienceRouter: RouterFactory = (context: Context) => {
       verifyJWT,
       checkAdminOrUserPermission,
       upload.any(),
-      schemaValidator(experienceController.schemas.addExperienceSchema),
+      schemaValidatorForBody(experienceController.schemas.addExperienceSchema),
       experienceController.createExperience,
     );
   router

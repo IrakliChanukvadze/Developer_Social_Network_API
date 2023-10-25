@@ -1,11 +1,14 @@
 import { Experience, ExperienceAttributes } from '../models/experience.model';
-import bcrypt from 'bcrypt';
+import { CacheService } from './cache.service';
+const cacheService = new CacheService();
 
 import dotenv from 'dotenv';
 dotenv.config();
 export class ExperienceService {
   async createExperience(experienceData: ExperienceAttributes) {
     const newExperiences = await Experience.create(experienceData);
+
+    cacheService.clearCache(newExperiences.user_id);
 
     return newExperiences;
   }
@@ -29,16 +32,16 @@ export class ExperienceService {
     const experienceToUpdate = await this.getExperienceById(id);
     experienceToUpdate.update(userData);
     await experienceToUpdate.save();
-
+    cacheService.clearCache(parseInt(id));
     return experienceToUpdate;
   }
 
   async deleteExperience(id: string): Promise<void> {
     const experienceToDelete = await this.getExperienceById(id);
-
     if (!experienceToDelete) {
       return null; // User not found
     }
+    cacheService.clearCache(parseInt(id));
 
     await experienceToDelete.destroy();
   }

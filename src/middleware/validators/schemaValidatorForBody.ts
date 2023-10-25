@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import AppError from '../utils/appError';
+import AppError from '../../utils/appError';
 
-export const schemaValidator = (schema?: any) => {
+export const schemaValidatorForBody = (schema?: any) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!schema) next();
     const { error } = schema.validate(req.body);

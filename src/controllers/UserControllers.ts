@@ -4,6 +4,8 @@ import { NextFunction, Response, Request } from 'express';
 import AppError from '../utils/appError';
 import { Context } from '../interfaces/general';
 import { updateUserSchema } from '../schemaValidators/userValidators/updateUser.schema';
+import { CacheService } from '../services/cache.service';
+import { logger } from '../libs/logger';
 
 class UserControllers {
   public readonly schemas = {
@@ -12,14 +14,12 @@ class UserControllers {
   };
 
   constructor(private context: Context) {}
-  createNewUser = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      const newTodo = await this.context.services.userService.createNewUser(
-        req.body,
-      );
-      res.status(201).json({ status: 'success', data: newTodo });
-    },
-  );
+  createNewUser = catchAsync(async (req: Request, res: Response) => {
+    const newTodo = await this.context.services.userService.createNewUser(
+      req.body,
+    );
+    res.status(201).json({ status: 'success', data: newTodo });
+  });
 
   getUsers = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -57,9 +57,20 @@ class UserControllers {
   getUserCV = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
-      const result = await this.context.services.userService.getUserCV(id);
+      const cache = new CacheService();
+      const cachedCV = await cache.getFromCache(parseInt(id));
+      if (cachedCV) {
+        logger.info(`CV with id: ${id}, was taken from redis`);
+        res.status(200).json({ status: 'resultesdd', cachedCV });
+      } else {
+        const result = await this.context.services.userService.getUserCV(id);
+        logger.info(
+          `CV with id: ${id}, wasnt in redis, so created from DB and saved to redis`,
+        );
+        cache.saveToCache(parseInt(id), result);
 
-      res.status(200).json({ status: 'resultesdd', result });
+        res.status(200).json({ status: 'resultesdd', result });
+      }
     },
   );
 

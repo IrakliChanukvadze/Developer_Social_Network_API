@@ -4,9 +4,10 @@ import upload from '../middleware/mutlerConfig';
 import { checkAdminPermission } from '../middleware/permisionMiddlwares/checkAdminPermision';
 import { verifyJWT } from '../middleware/verifyJWT';
 import UserControllers from '../controllers/UserControllers';
-import { schemaValidator } from '../middleware/schemaValidator';
+import { schemaValidatorForBody } from '../middleware/validators/schemaValidatorForBody';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
+import { schemaValidatorForParams } from '../middleware/validators/schemaValidatorForParams';
 
 export const makeUserRouter: RouterFactory = (context: Context) => {
   const userControllers = new UserControllers(context);
@@ -18,7 +19,7 @@ export const makeUserRouter: RouterFactory = (context: Context) => {
       verifyJWT,
       checkAdminPermission,
       upload.any(),
-      schemaValidator(userControllers.schemas.createUserSchema),
+      schemaValidatorForBody(userControllers.schemas.createUserSchema),
       userControllers.createNewUser,
     );
 

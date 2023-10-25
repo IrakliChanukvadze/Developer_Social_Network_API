@@ -1,11 +1,15 @@
 import { Feedback, FeedbackAttributes } from '../models/feedbacks.model';
 import dotenv from 'dotenv';
+import { CacheService } from './cache.service';
+const cacheService = new CacheService();
 
 dotenv.config();
 export class FeedbackService {
   async createFeedback(feedbackData: FeedbackAttributes) {
     console.log(feedbackData);
     const newFeedback = await Feedback.create(feedbackData);
+    cacheService.clearCache(newFeedback.from_user);
+    cacheService.clearCache(newFeedback.to_user);
 
     return newFeedback;
   }
@@ -32,13 +36,15 @@ export class FeedbackService {
     const feedbackToUpdate = await this.getFeedbackById(id);
     feedbackToUpdate.update(userData);
     await feedbackToUpdate.save();
-
+    cacheService.clearCache(feedbackToUpdate.from_user);
+    cacheService.clearCache(feedbackToUpdate.to_user);
     return feedbackToUpdate;
   }
 
   async deleteFeedback(id: string): Promise<void> {
     const feedbackToDelete = await this.getFeedbackById(id);
-
+    cacheService.clearCache(feedbackToDelete.from_user);
+    cacheService.clearCache(feedbackToDelete.to_user);
     if (!feedbackToDelete) {
       return null;
     }

@@ -4,6 +4,7 @@ import { addFeedbackSchema } from '../schemaValidators/feedbackSchemaValidators/
 import { FeedbackAttributes } from '../models/feedbacks.model';
 import { Context } from '../interfaces/general';
 import AppError from '../utils/appError';
+import { logger } from '../libs/logger';
 
 class FeedbackController {
   public readonly schemas = { addFeedbackSchema };
@@ -12,8 +13,7 @@ class FeedbackController {
   createFeedback = async (req: Request, res: Response, next: NextFunction) => {
     const feedbackData: FeedbackAttributes = req.body;
     //@ts-ignore
-    feedbackData.from_user = req.user.id;
-
+    feedbackData.from_user = req?.user?.id;
     const newFeedback =
       await this.context.services.feedbackService.createFeedback(feedbackData);
 

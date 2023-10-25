@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import upload from '../middleware/mutlerConfig';
 import { checkAdminPermission } from '../middleware/permisionMiddlwares/checkAdminPermision';
 import { verifyJWT } from '../middleware/verifyJWT';
-import { schemaValidator } from '../middleware/schemaValidator';
+import { schemaValidatorForBody } from '../middleware/validators/schemaValidatorForBody';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 import FeedbackControllers from '../controllers/FeedbackControllers';
@@ -18,7 +18,7 @@ export const makeFeedbackRouter: RouterFactory = (context: Context) => {
       verifyJWT,
       checkAdminOrUserPermission,
       upload.any(),
-      schemaValidator(feedbackControllers.schemas.addFeedbackSchema),
+      schemaValidatorForBody(feedbackControllers.schemas.addFeedbackSchema),
       feedbackControllers.createFeedback,
     );
   router

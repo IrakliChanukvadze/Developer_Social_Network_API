@@ -1,11 +1,13 @@
-import bcrypt from 'bcrypt';
-
 import dotenv from 'dotenv';
 import { Project, ProjectAttributes } from '../models/projects.model';
 dotenv.config();
+import { CacheService } from './cache.service';
+const cacheService = new CacheService();
+
 export class ProjectService {
   async createProject(projectData: ProjectAttributes, image: any) {
     const data = { ...projectData, image: image.filename };
+    cacheService.clearCache(projectData.user_id);
     const newProject = await Project.create(data);
 
     return newProject;
@@ -38,10 +40,10 @@ export class ProjectService {
   }
   async deleteProject(id: string): Promise<void> {
     const projectToDelete = await this.getProjectById(id);
-
     if (!projectToDelete) {
       return null;
     }
+    cacheService.clearCache(parseInt(id));
 
     await projectToDelete.destroy();
   }

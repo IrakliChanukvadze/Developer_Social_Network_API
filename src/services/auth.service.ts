@@ -6,7 +6,9 @@ import { LoginRequest } from '../schemaValidators/authSchemaValidators/login.sch
 import comparePasswords from '../utils/comparePasswords';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+
 dotenv.config();
+
 export class AuthService {
   async createNewUser(userData: RegistrationRequest, image: any) {
     const hashedPassword = await bcrypt.hash(userData.password, 10);

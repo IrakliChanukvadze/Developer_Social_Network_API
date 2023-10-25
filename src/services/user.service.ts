@@ -1,6 +1,8 @@
 import { User } from '../models/user.model';
 import { RegistrationRequest } from '../schemaValidators/authSchemaValidators/registration.schema';
 import bcrypt from 'bcrypt';
+import { CacheService } from './cache.service';
+const cacheService = new CacheService();
 
 export class UserService {
   async createNewUser(userData: RegistrationRequest) {
@@ -29,8 +31,8 @@ export class UserService {
       offset,
       attributes: [
         'id',
-        'firstName',
-        'lastName',
+        'first_name',
+        'last_name',
         'title',
         'summary',
         'email',
@@ -72,7 +74,7 @@ export class UserService {
     const userToUpdate = await this.getUserById(id);
     userToUpdate.update(userData);
     await userToUpdate.save();
-
+    cacheService.clearCache(parseInt(id));
     return userToUpdate;
   }
 
@@ -82,6 +84,7 @@ export class UserService {
     if (!userToDelete) {
       return null; // User not found
     }
+    cacheService.clearCache(parseInt(id));
 
     await userToDelete.destroy();
   }

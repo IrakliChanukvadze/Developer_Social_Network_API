@@ -12,9 +12,7 @@ export const checkAdminPermission = async (
     where: { email: req?.user.email },
   });
 
-  //@ts-ignore
-
-  const permision = userFromBase.role === 'Admin';
+  const permision = userFromBase?.role === 'Admin';
 
   if (permision) {
     next();

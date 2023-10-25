@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import upload from '../middleware/mutlerConfig';
 import { checkAdminPermission } from '../middleware/permisionMiddlwares/checkAdminPermision';
 import { verifyJWT } from '../middleware/verifyJWT';
-import { schemaValidator } from '../middleware/schemaValidator';
+import { schemaValidatorForBody } from '../middleware/validators/schemaValidatorForBody';
 import { checkUserPermission } from '../middleware/permisionMiddlwares/checkUserPermision';
 import { checkAdminOrUserPermission } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 import ProjectControllers from '../controllers/ProjectsControllers';
@@ -18,7 +18,7 @@ export const makeProjectRouter: RouterFactory = (context: Context) => {
       verifyJWT,
       checkAdminOrUserPermission,
       upload.single('image'),
-      schemaValidator(projectControllers.schemas.createNewProject),
+      schemaValidatorForBody(projectControllers.schemas.createNewProject),
       projectControllers.createProject,
     );
 
