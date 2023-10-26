@@ -59,6 +59,7 @@ class UserControllers {
       const { id } = req.params;
       const cache = new CacheService();
       const cachedCV = await cache.getFromCache(parseInt(id));
+      console.log(cachedCV, 'cached CV -----------------------');
       if (cachedCV) {
         logger.info(`CV with id: ${id}, was taken from redis`);
         res.status(200).json({ status: 'resultesdd', cachedCV });
@@ -68,7 +69,6 @@ class UserControllers {
           `CV with id: ${id}, wasnt in redis, so created from DB and saved to redis`,
         );
         cache.saveToCache(parseInt(id), result);
-
         res.status(200).json({ status: 'resultesdd', result });
       }
     },

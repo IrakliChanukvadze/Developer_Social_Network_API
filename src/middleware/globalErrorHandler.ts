@@ -13,7 +13,8 @@ type ErrorHandler = (
 ) => void;
 
 const errorHandler: ErrorHandler = (err, req, res, next) => {
-  logger.error(`An error occurred: ${err.message}`);
+  const id = (req as any).id;
+  logger.error(`An error occurred: ${err.message}, with request id: ${id}`);
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
   res.status(err.statusCode).json({ status: err.status, message: err.message });

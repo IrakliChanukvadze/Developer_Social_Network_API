@@ -27,9 +27,7 @@ export const makeUserRouter: RouterFactory = (context: Context) => {
     .route('/')
     .get(verifyJWT, checkAdminPermission, userControllers.getUsers);
 
-  router
-    .route('/:id/cv')
-    .get(schemaValidatorForParams, userControllers.getUserCV);
+  router.route('/:id/cv').get(userControllers.getUserCV);
   router
     .route('/:id')
     .get(schemaValidatorForParams, userControllers.getUserById);
