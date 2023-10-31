@@ -17,7 +17,10 @@ export class ExperienceService {
     const limit = pageSize || 10; // Default page size
     const offset = (page - 1) * limit || 0; // Calculate offset based on the page
 
-    const experiences = await Experience.findAll();
+    const experiences = await Experience.findAll({
+      limit,
+      offset,
+    });
 
     return experiences;
   }

@@ -66,7 +66,7 @@ export class Feedback
     );
   }
 
-  static associate(models: Models, sequelize: Sequelize) {
+  static associate(models: Models) {
     // Define associations here, if needed.
     Feedback.belongsTo(models.user, {
       foreignKey: 'from_user',

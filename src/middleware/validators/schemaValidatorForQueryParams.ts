@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../../utils/appError';
 
-function validateQueryParameters(
+export function validateQueryParameters(
   req: Request,
   res: Response,
   next: NextFunction,

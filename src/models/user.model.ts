@@ -90,7 +90,7 @@ export class User
     );
   }
 
-  static associate(models: Models, sequelize: Sequelize) {
+  static associate(models: Models) {
     User.hasMany(models.experience, {
       foreignKey: 'user_id',
       as: 'experiences', // optional alias for the association

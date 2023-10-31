@@ -21,24 +21,22 @@ class UserControllers {
     res.status(201).json({ status: 'success', data: newTodo });
   });
 
-  getUsers = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      let { page, limit } = req.query;
+  getUsers = catchAsync(async (req: Request, res: Response) => {
+    const { page, limit } = req.query;
 
-      // Define default values for page and limit
-      const defaultPage = 1;
-      const defaultLimit = 10;
+    // Define default values for page and limit
+    const defaultPage = 1;
+    const defaultLimit = 10;
 
-      // Parse page and limit as integers, use default values if not provided
-      const parsedPage = page ? parseInt(page as string, 10) : defaultPage;
-      const parsedLimit = limit ? parseInt(limit as string, 10) : defaultLimit;
-      const users = await this.context.services.userService.getUsers(
-        parsedLimit,
-        parsedPage,
-      );
-      res.status(200).json({ users });
-    },
-  );
+    // Parse page and limit as integers, use default values if not provided
+    const parsedPage = page ? parseInt(page as string, 10) : defaultPage;
+    const parsedLimit = limit ? parseInt(limit as string, 10) : defaultLimit;
+    const users = await this.context.services.userService.getUsers(
+      parsedLimit,
+      parsedPage,
+    );
+    res.status(200).json({ users });
+  });
 
   getUserById = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -54,25 +52,22 @@ class UserControllers {
     },
   );
 
-  getUserCV = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      const { id } = req.params;
-      const cache = new CacheService();
-      const cachedCV = await cache.getFromCache(parseInt(id));
-      console.log(cachedCV, 'cached CV -----------------------');
-      if (cachedCV) {
-        logger.info(`CV with id: ${id}, was taken from redis`);
-        res.status(200).json({ status: 'resultesdd', cachedCV });
-      } else {
-        const result = await this.context.services.userService.getUserCV(id);
-        logger.info(
-          `CV with id: ${id}, wasnt in redis, so created from DB and saved to redis`,
-        );
-        cache.saveToCache(parseInt(id), result);
-        res.status(200).json({ status: 'resultesdd', result });
-      }
-    },
-  );
+  getUserCV = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const cache = new CacheService();
+    const cachedCV = await cache.getFromCache(parseInt(id));
+    if (cachedCV) {
+      logger.info(`CV with id: ${id}, was taken from redis`);
+      res.status(200).json({ status: 'resultesdd', cachedCV });
+    } else {
+      const result = await this.context.services.userService.getUserCV(id);
+      logger.info(
+        `CV with id: ${id}, wasnt in redis, so created from DB and saved to redis`,
+      );
+      cache.saveToCache(parseInt(id), result);
+      res.status(200).json({ status: 'resultesdd', result });
+    }
+  });
 
   updateUser = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -92,15 +87,13 @@ class UserControllers {
     },
   );
 
-  deleteUser = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      const { id } = req.params;
+  deleteUser = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-      await this.context.services.userService.deleteUser(id);
+    await this.context.services.userService.deleteUser(id);
 
-      res.status(204).send();
-    },
-  );
+    res.status(204).send();
+  });
 }
 
 export default UserControllers;

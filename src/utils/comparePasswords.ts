@@ -4,12 +4,8 @@ async function comparePasswords(
   plaintextPassword: string,
   hashedPassword: string,
 ) {
-  try {
-    const match = await bcrypt.compare(plaintextPassword, hashedPassword);
-    return match;
-  } catch (error) {
-    throw error;
-  }
+  const match = await bcrypt.compare(plaintextPassword, hashedPassword);
+  return match;
 }
 
 export default comparePasswords;

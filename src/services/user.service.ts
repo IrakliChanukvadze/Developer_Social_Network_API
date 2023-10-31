@@ -47,8 +47,6 @@ export class UserService {
       include: [{ all: true }],
     });
 
-    //@ts-ignore
-
     return result;
   }
 
@@ -69,9 +67,12 @@ export class UserService {
   }
 
   async updateUser(id: string, userData: any) {
-    userData.password = await bcrypt.hash(userData.password, 10);
+    if(userData.password){
 
+      userData.password = await bcrypt.hash(userData.password, 10);
+    }
     const userToUpdate = await this.getUserById(id);
+   
     userToUpdate.update(userData);
     await userToUpdate.save();
     cacheService.clearCache(parseInt(id));

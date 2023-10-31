@@ -1,5 +1,5 @@
 import { Context, RouterFactory } from '../interfaces/general';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import upload from '../middleware/mutlerConfig';
 import { checkAdminPermission } from '../middleware/permisionMiddlwares/checkAdminPermision';
 import { verifyJWT } from '../middleware/verifyJWT';

@@ -4,15 +4,15 @@ import { addFeedbackSchema } from '../schemaValidators/feedbackSchemaValidators/
 import { FeedbackAttributes } from '../models/feedbacks.model';
 import { Context } from '../interfaces/general';
 import AppError from '../utils/appError';
-import { logger } from '../libs/logger';
+import { IRequestWithUser } from '../middleware/permisionMiddlwares/checkAdminOrUserPermision';
 
 class FeedbackController {
   public readonly schemas = { addFeedbackSchema };
 
   constructor(private context: Context) {}
-  createFeedback = async (req: Request, res: Response, next: NextFunction) => {
+  createFeedback = async (req: IRequestWithUser, res: Response) => {
     const feedbackData: FeedbackAttributes = req.body;
-    //@ts-ignore
+    
     feedbackData.from_user = req?.user?.id;
     const newFeedback =
       await this.context.services.feedbackService.createFeedback(feedbackData);
@@ -20,29 +20,26 @@ class FeedbackController {
     res.status(201).json(newFeedback);
   };
 
-  getFeedbacks = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      let { page, pageSize } = req.query;
+  getFeedbacks = catchAsync(async (req: Request, res: Response) => {
+    const { page, pageSize } = req.query;
 
-      // Define default values for page and pageSize
-      const defaultPage = 1;
-      const defaultPageSize = 10;
+    // Define default values for page and pageSize
+    const defaultPage = 1;
+    const defaultPageSize = 10;
 
-      // Parse page and pageSize as integers, use default values if not provided
-      const parsedPage = page ? parseInt(page as string, 10) : defaultPage;
-      const parsedPageSize = pageSize
-        ? parseInt(pageSize as string, 10)
-        : defaultPageSize;
+    // Parse page and pageSize as integers, use default values if not provided
+    const parsedPage = page ? parseInt(page as string, 10) : defaultPage;
+    const parsedPageSize = pageSize
+      ? parseInt(pageSize as string, 10)
+      : defaultPageSize;
 
-      const feedbacks =
-        await this.context.services.feedbackService.getFeedbacks(
-          parsedPage,
-          parsedPageSize,
-        );
+    const feedbacks = await this.context.services.feedbackService.getFeedbacks(
+      parsedPage,
+      parsedPageSize,
+    );
 
-      res.status(200).json({ feedbacks });
-    },
-  );
+    res.status(200).json({ feedbacks });
+  });
 
   getFeedbackById = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -78,15 +75,13 @@ class FeedbackController {
     },
   );
 
-  deleteFeedback = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      const { id } = req.params;
+  deleteFeedback = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-      await this.context.services.feedbackService.deleteFeedback(id);
+    await this.context.services.feedbackService.deleteFeedback(id);
 
-      res.status(204).send();
-    },
-  );
+    res.status(204).send();
+  });
 }
 
 export default FeedbackController;
